@@ -223,6 +223,23 @@ function Landing() {
     </div>
   );
 }
+function Logout() {
+  const navigate = useNavigate();
+  const { settings } = useExpenses();
+  return (
+    <div className="logout-page">
+      <section className="logout-card">
+        <Link className="brand" to="/"><span className="brand-icon">S</span> Spendly</Link>
+        <span className="logout-mark">✓</span>
+        <span className="eyebrow">SESSION ENDED</span>
+        <h1>You’re signed out</h1>
+        <p>Your {settings.email ? "local profile" : "guest account"} and saved data stay on this browser. You can continue where you left off next time.</p>
+        <button className="button primary auth-submit" onClick={() => navigate("/login")}>Continue on this device</button>
+        <Link className="text-link" to="/">Back to landing page</Link>
+      </section>
+    </div>
+  );
+}
 function Auth({
   mode,
 }: {
@@ -232,7 +249,7 @@ function Auth({
   const [error, setError] = useState("");
   const [accepted, setAccepted] = useState(false);
   const navigate = useNavigate();
-  const { setSettings } = useExpenses();
+  const { settings, setSettings } = useExpenses();
   const titles = {
     login: "Welcome back",
     register: "Create your account",
@@ -263,10 +280,14 @@ function Auth({
       setStage("login");
       return;
     }
+    if (stage === "login" && settings.email && email.toLowerCase() !== settings.email.toLowerCase()) {
+      setError("This demo only has a local profile on this browser. Continue as guest or use the saved email.");
+      return;
+    }
     setSettings((s) => ({
       ...s,
-      name: String(form.get("name") || "Guest"),
-      email,
+      name: stage === "login" ? (s.name || "Guest") : String(form.get("name") || "Guest"),
+      email: stage === "login" ? s.email : email,
     }));
     navigate("/app");
   }
@@ -416,7 +437,7 @@ function Auth({
               className="button secondary auth-submit"
               type="button"
               onClick={() => {
-                setSettings((s) => ({ ...s, name: "Guest", email: "" }));
+                if (!settings.email) setSettings((s) => ({ ...s, name: s.name || "Guest", email: "" }));
                 navigate("/app");
               }}
             >
@@ -458,6 +479,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Auth mode="login" />} />
+        <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Auth mode="register" />} />
         <Route path="/forgot-password" element={<Auth mode="forgot" />} />
         <Route path="/verify" element={<Auth mode="verify" />} />

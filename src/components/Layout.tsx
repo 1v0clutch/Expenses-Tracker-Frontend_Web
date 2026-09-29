@@ -41,6 +41,7 @@ export default function Layout() {
             <b>Make every dollar count</b>
             <span>Your money plan starts with a little awareness.</span>
           </div>
+          <div className="sidebar-account-actions">
           <button
             className="profile-chip"
             onClick={() => navigate("/app/account")}
@@ -56,6 +57,8 @@ export default function Layout() {
             </span>
             <span>⌄</span>
           </button>
+          <button className="sidebar-logout" onClick={() => navigate("/logout")}>↪ Log out</button>
+          </div>
         </div>
       </aside>
       <div className="app-main">
@@ -108,7 +111,7 @@ export default function Layout() {
                 {icon} &nbsp; {label}
               </NavLink>
             ))}
-            <button onClick={() => navigate("/")}>View landing page</button>
+            <button onClick={() => navigate("/logout")}>↪ &nbsp; Log out</button>
           </nav>
         )}
         <main className="page-content">

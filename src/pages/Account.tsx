@@ -272,6 +272,13 @@ export default function Account() {
                 Read policy
               </button>
             </div>
+            <div className="export-row">
+              <span>
+                <b>Sign out</b>
+                <small>End this session and keep your profile and records on this browser.</small>
+              </span>
+              <button className="button secondary" onClick={() => navigate("/logout")}>Log out</button>
+            </div>
             <div className="export-row danger-row">
               <span>
                 <b>Delete local data</b>
